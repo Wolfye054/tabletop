@@ -9,6 +9,7 @@ export class Item {
         this.y = 0;
         this.width = this.image.naturalWidth;
         this.height = this.image.naturalHeight;
+        this.rotation = 0;
 
         Item.list.push(this)
     }

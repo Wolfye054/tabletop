@@ -7,10 +7,63 @@ export class Input {
         y: 0,
         down: false,
     }
+
+    static handle(delta_time) {
+        if (Input.keys['q']) {
+            Camera.rotation += 1 * delta_time;
+        }
+        if (Input.keys['e']) {
+            Camera.rotation -= 1 * delta_time;
+        }
+        let moveX = 0;
+        let moveY = 0;
+
+        if (Input.keys['w']) moveY += 1;
+        if (Input.keys['s']) moveY -= 1;
+        if (Input.keys['d']) moveX += 1;
+        if (Input.keys['a']) moveX -= 1;
+
+        // AI
+        if (moveX !== 0 || moveY !== 0) {
+            const speed = 500 * delta_time;
+            const angle = Camera.rotation;
+
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+
+            // Rotate movement vector
+            const worldX = moveX * cos - moveY * sin;
+            const worldY = moveX * sin + moveY * cos;
+
+            Camera.x += worldX * speed / Camera.zoom;
+            Camera.y += worldY * speed / Camera.zoom;
+        }
+    }
+
+    static isHovering(item) {
+        //AI
+        const [mx, my] = Input.mouse.getWorld();
+
+        const dx = mx - item.x;
+        const dy = my - item.y;
+
+        const cos = Math.cos(item.rotation);
+        const sin = Math.sin(item.rotation);
+
+        const localX = dx * cos - dy * sin;
+        const localY = dx * sin + dy * cos;
+
+        return (
+            localX >= -item.width / 2 &&
+            localX <= item.width / 2 &&
+            localY >= -item.height / 2 &&
+            localY <= item.height / 2
+        );
+    }
 }
 
 Input.mouse.getWorld = function () {
-    //AI Black Magic
+    //AI
     const sx = Input.mouse.x;
     const sy = Input.mouse.y;
 
@@ -32,7 +85,7 @@ Input.mouse.getWorld = function () {
     // camera local -> world
     return [
         rx + Camera.x,
-        -(ry + Camera.y)
+        -ry + Camera.y
     ];
 };
 
@@ -43,17 +96,3 @@ window.addEventListener("keydown", e => {
 window.addEventListener("keyup", e => {
     Input.keys[e.key] = false;
 })
-
-Camera.canvas.addEventListener("mousemove", e => {
-    const rect = Camera.canvas.getBoundingClientRect();
-    Input.mouse.x = e.clientX - rect.left;
-    Input.mouse.y = e.clientY - rect.top;
-})
-
-Camera.canvas.addEventListener("wheel", e => {
-    e.preventDefault();
-    const zoomFactor = 1.1;
-
-    if (e.deltaY < 0) Camera.zoom *= zoomFactor;
-    else Camera.zoom /= zoomFactor;
-});
