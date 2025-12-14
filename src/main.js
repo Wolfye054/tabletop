@@ -1,6 +1,7 @@
 import { Camera } from './Camera.js';
 import { Input } from './Input.js';
 import { Item } from './Item.js';
+import { Card } from './Card.js';
 
 let last_time = 0;
 
@@ -33,14 +34,16 @@ function update(delta_time) {
     }
 }
 
-for (let i = 0; i < 999; i++) {
-    const item = new Item('test', './img/card.png');
+for (let i = 0; i < 400; i++) {
+    const item = new Card('./img/card.png', './img/back.png');
     let x_sign = Math.random() > 0.5 ? -1 : 1;
     let y_sign = Math.random() > 0.5 ? -1 : 1;
+    let flip = Math.random() > 0.5 ? false : true;
 
     item.x = Math.floor(Math.random() * 12000) * x_sign;
     item.y = Math.floor(Math.random() * 12000) * y_sign;
     item.rotation = Math.random() * Math.PI * 2;
+    if (flip) item.flip();
 }
 
 requestAnimationFrame(gameLoop);

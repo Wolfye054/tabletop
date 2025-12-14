@@ -1,5 +1,6 @@
 import { Camera } from "./Camera.js";
 import { Item } from "./Item.js";
+import { Card } from "./Card.js";
 
 let hovering = null;
 
@@ -18,6 +19,9 @@ export class Input {
     }
 
     static handle(delta_time) {
+        if (Input.pressed_keys['f'] && Input.getHovering() && Input.getHovering() instanceof Card) {
+            Input.getHovering().flip();
+        }
         if (Input.held_keys['q']) {
             if (Item.held)
                 Item.held.rotation -= 5 * delta_time;

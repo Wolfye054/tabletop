@@ -2,10 +2,9 @@ export class Item {
     static list = [];
     static held = null
 
-    constructor(name, imageURL) {
-        this.name = name;
+    constructor(image) {
         this.image = document.createElement('img');
-        this.image.src = imageURL;
+        this.image.src = image;
         this.x = 0;
         this.y = 0;
         this.width = this.image.naturalWidth;
