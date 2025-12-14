@@ -23,6 +23,16 @@ let test2 = new Item('test2', './img/card.png');
 let test3 = new Item('test3', './img/card.png');
 let test4 = new Item('test4', './img/card.png');
 
+for (let i = 0; i < 999; i++) {
+    const item = new Item('test', './img/card.png');
+    let x_sign = Math.random() > 0.5 ? -1 : 1;
+    let y_sign = Math.random() > 0.5 ? -1 : 1;
+
+    item.x = Math.floor(Math.random() * 12000) * x_sign;
+    item.y = Math.floor(Math.random() * 12000) * y_sign;
+    item.rotation = Math.random() * Math.PI * 2;
+}
+
 test2.y = 1200;
 test3.x = 1200;
 test4.y = 1200;
