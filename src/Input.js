@@ -1,27 +1,42 @@
 import { Camera } from "./Camera.js";
+import { Item } from "./Item.js";
+
+let hovering = null;
 
 export class Input {
-    static keys = {}
+    static held_keys = {}
+    static pressed_keys = {}
     static mouse = {
         x: 0,
         y: 0,
         down: false,
+        click: false
+    }
+
+    static getHovering() {
+        return hovering;
     }
 
     static handle(delta_time) {
-        if (Input.keys['q']) {
-            Camera.rotation += 1 * delta_time;
+        if (Input.held_keys['q']) {
+            if (Item.held)
+                Item.held.rotation -= 5 * delta_time;
+            else
+                Camera.rotation += 2 * delta_time;
         }
-        if (Input.keys['e']) {
-            Camera.rotation -= 1 * delta_time;
+        if (Input.held_keys['e']) {
+            if (Item.held)
+                Item.held.rotation += 5 * delta_time;
+            else
+                Camera.rotation -= 2 * delta_time;
         }
         let moveX = 0;
         let moveY = 0;
 
-        if (Input.keys['w']) moveY += 1;
-        if (Input.keys['s']) moveY -= 1;
-        if (Input.keys['d']) moveX += 1;
-        if (Input.keys['a']) moveX -= 1;
+        if (Input.held_keys['w']) moveY += 1;
+        if (Input.held_keys['s']) moveY -= 1;
+        if (Input.held_keys['d']) moveX += 1;
+        if (Input.held_keys['a']) moveX -= 1;
 
         // AI
         if (moveX !== 0 || moveY !== 0) {
@@ -38,28 +53,42 @@ export class Input {
             Camera.x += worldX * speed / Camera.zoom;
             Camera.y += worldY * speed / Camera.zoom;
         }
+
+        // Find card being hovered over
+        hovering = null;
+        Item.list.forEach(item => {
+            if (isHovering(item)) hovering = item;
+        })
+
+        // Update press inputs to be false
+        Object.keys(Input.pressed_keys).forEach(key => {
+            Input.pressed_keys[key] = false;
+        })
+        Input.mouse.click = false;
     }
 
-    static isHovering(item) {
-        //AI
-        const [mx, my] = Input.mouse.getWorld();
 
-        const dx = mx - item.x;
-        const dy = my - item.y;
+}
 
-        const cos = Math.cos(item.rotation);
-        const sin = Math.sin(item.rotation);
+function isHovering(item) {
+    //AI
+    const [mx, my] = Input.mouse.getWorld();
 
-        const localX = dx * cos - dy * sin;
-        const localY = dx * sin + dy * cos;
+    const dx = mx - item.x;
+    const dy = my - item.y;
 
-        return (
-            localX >= -item.width / 2 &&
-            localX <= item.width / 2 &&
-            localY >= -item.height / 2 &&
-            localY <= item.height / 2
-        );
-    }
+    const cos = Math.cos(item.rotation);
+    const sin = Math.sin(item.rotation);
+
+    const localX = dx * cos - dy * sin;
+    const localY = dx * sin + dy * cos;
+
+    return (
+        localX >= -item.width / 2 &&
+        localX <= item.width / 2 &&
+        localY >= -item.height / 2 &&
+        localY <= item.height / 2
+    );
 }
 
 Input.mouse.getWorld = function () {
@@ -90,9 +119,19 @@ Input.mouse.getWorld = function () {
 };
 
 window.addEventListener("keydown", e => {
-    Input.keys[e.key] = true;
+    Input.held_keys[e.key] = true;
+    Input.pressed_keys[e.key] = true;
 })
 
 window.addEventListener("keyup", e => {
-    Input.keys[e.key] = false;
+    Input.held_keys[e.key] = false;
+})
+
+window.addEventListener("mousedown", e => {
+    Input.mouse.click = true;
+    Input.mouse.down = true;
+})
+
+window.addEventListener('mouseup', e => {
+    Input.mouse.down = false;
 })

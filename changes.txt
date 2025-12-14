@@ -1,0 +1,6 @@
+Item Movement
+
+-Added a getHovering() function to Input that gets the item the player is currently hovering over
+-Changed how rendering the hovering item in Camera works
+-You can now pick up and move items
+-Rotating while holding a card rotates the item instead of the camera

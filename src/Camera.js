@@ -46,17 +46,20 @@ export class Camera {
                 item.height
             );
 
-            if (Input.isHovering(item)) {
-                ctx.save();
-                ctx.strokeStyle = "#FFFF00";
-                ctx.lineWidth = 8 / Camera.zoom;
-                ctx.translate(-item.x, -item.y)
-                ctx.strokeRect(item.x - item.width / 2, item.y - item.height / 2, item.width, item.height)
-                ctx.restore();
-            }
             ctx.restore();
         });
 
+        const hovering = Input.getHovering()
+        if (hovering) {
+            ctx.save();
+            ctx.translate(hovering.x, -hovering.y);
+            ctx.rotate(hovering.rotation);
+            ctx.strokeStyle = Item.held ? "#0000FF" : "#FFFF00";
+            ctx.lineWidth = 8 / Camera.zoom;
+            ctx.translate(-hovering.x, -hovering.y)
+            ctx.strokeRect(hovering.x - hovering.width / 2, hovering.y - hovering.height / 2, hovering.width, hovering.height)
+            ctx.restore();
+        }
         ctx.restore();
     }
 

@@ -15,13 +15,23 @@ function gameLoop(current_time) {
 }
 
 function update(delta_time) {
+    if (Input.pressed_keys['h']) {
+        console.log('test')
+    }
+    if (Input.mouse.click && Input.getHovering()) {
+        Item.held = Input.getHovering();
+    };
+    if (!Input.mouse.down) {
+        Item.held = null
+    }
     Input.handle(delta_time);
-}
 
-let test1 = new Item('test1', './img/card.png');
-let test2 = new Item('test2', './img/card.png');
-let test3 = new Item('test3', './img/card.png');
-let test4 = new Item('test4', './img/card.png');
+    if (Item.held) {
+        const [x, y] = Input.mouse.getWorld();
+        Item.held.x = x;
+        Item.held.y = y;
+    }
+}
 
 for (let i = 0; i < 999; i++) {
     const item = new Item('test', './img/card.png');
@@ -32,14 +42,5 @@ for (let i = 0; i < 999; i++) {
     item.y = Math.floor(Math.random() * 12000) * y_sign;
     item.rotation = Math.random() * Math.PI * 2;
 }
-
-test2.y = 1200;
-test3.x = 1200;
-test4.y = 1200;
-test4.x = 1200;
-test1.rotation = 2;
-// test2.rotation = 2;
-// test3.rotation = 2;
-test4.rotation = -2;
 
 requestAnimationFrame(gameLoop);

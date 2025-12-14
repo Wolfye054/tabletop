@@ -1,5 +1,6 @@
 export class Item {
     static list = [];
+    static held = null
 
     constructor(name, imageURL) {
         this.name = name;
