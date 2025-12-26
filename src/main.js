@@ -61,7 +61,7 @@ const render = function () {
     // Move world relative to camera
     ctx.translate(-camera.x, camera.y);
 
-    // Draw items
+    // Draw game items
     game.items.forEach(item => {
         ctx.save();
 
@@ -83,6 +83,10 @@ const render = function () {
         ctx.restore();
     });
 
+    //TODO
+    // draw hand
+
+    // draw hovering/holding outline
     if (hovering) {
         ctx.save();
         ctx.translate(hovering.x, -hovering.y);
@@ -140,6 +144,19 @@ const flipCard = function (card) {
     if (card.hidden) card.image.src = card.front;
     else card.image.src = card.back;
     card.hidden = !card.hidden;
+}
+
+const draw = function (item) {
+    if (item.type == 'deck') {
+        //TODO
+    }
+    else if (item.type == 'card') {
+        // remove card from game items.
+        const index = game.items.indexOf(item);
+        game.items.splice(index, 1);
+
+        player.hand.push(item);
+    }
 }
 
 const getWorld = function () {
@@ -233,6 +250,11 @@ const handleInput = function (delta_time) {
 
     if (Input.mouse.click && hovering) {
         player.held = hovering;
+        const index = game.items.indexOf(player.held);
+        if (index !== -1) {
+            game.items.splice(index, 1); // remove
+            game.items.push(player.held);       // add to top
+        }
     };
     if (!Input.mouse.down) {
         player.held = null
