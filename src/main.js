@@ -1,5 +1,6 @@
 import { Input } from "./input.js";
 
+const CARD_IMG_BASE = new URL('../img/cards/', import.meta.url);
 let last_time = 0;
 let prev_id = 0;
 let player = null;
@@ -20,9 +21,7 @@ const start = function () {
     player = createPlayer('test');
 
     //TEST
-    const randCard = getRandomCard();
-    console.log(randCard);
-    createCard('../img/cards/' + randCard + '.png', '../img/back.png');
+    createCard(new URL(getRandomCard() + '.png', CARD_IMG_BASE).href, '../img/back.png');
     requestAnimationFrame(loop);
 }
 
@@ -271,7 +270,7 @@ const handleInput = function (delta_time) {
 
     //TEST
     if (Input.pressed_keys['c']) {
-        const card = createCard('../img/cards/' + getRandomCard() + '.png', '../img/back.png');
+        const card = createCard(new URL(getRandomCard() + '.png', CARD_IMG_BASE).href, '../img/back.png');
         const mouse = getWorld();
 
         card.x = mouse.x;
