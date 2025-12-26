@@ -21,7 +21,7 @@ const start = function () {
     player = createPlayer('test');
 
     //TEST
-    createCard(new URL(getRandomCard() + '.png', CARD_IMG_BASE).href, '../img/back.png');
+    createCard(new URL(getRandomCard() + '.png', CARD_IMG_BASE).href, new URL('back.png', CARD_IMG_BASE));
     requestAnimationFrame(loop);
 }
 
@@ -270,7 +270,7 @@ const handleInput = function (delta_time) {
 
     //TEST
     if (Input.pressed_keys['c']) {
-        const card = createCard(new URL(getRandomCard() + '.png', CARD_IMG_BASE).href, '../img/back.png');
+        const card = createCard(new URL(getRandomCard() + '.png', CARD_IMG_BASE).href, new URL('back.png', CARD_IMG_BASE));
         const mouse = getWorld();
 
         card.x = mouse.x;
